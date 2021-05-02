@@ -8,31 +8,47 @@ export const Elevator = () => {
   const [elevators, setElevators] = useState([
     {
       isActive: false,
-      position: 0
+      position: (floors.length -1 ) * elevatorHeight
     },
     {
       isActive: false,
-      position: 0
+      position: (floors.length -1 ) * elevatorHeight
     },
     {
       isActive: false,
-      position: 0
+      position: (floors.length -1 ) * elevatorHeight
     },
   ]);
 
-  const callElevator = (index) => {
+  const callElevator = (currentIndex) => {
     let freeElevatorIndex = null;
     elevators.map((elevator, index) => {
       if (!elevator.isActive) {
         freeElevatorIndex = index;
       }
     });
-
+    let elevatorWithNewPosition = [...elevators];
     if (freeElevatorIndex !== null) {
-      let elevatorWithNewPosition = [...elevators];
-      elevatorWithNewPosition[freeElevatorIndex].position = index * elevatorHeight;
+      elevatorWithNewPosition[freeElevatorIndex].position = currentIndex * elevatorHeight;
       elevatorWithNewPosition[freeElevatorIndex].isActive = true;
       setElevators(elevatorWithNewPosition)
+    } else {
+      const needle = currentIndex * elevatorHeight;
+      const numbers = elevators.map((elevator, index) => {
+        return elevator.position;
+      });
+
+      numbers.sort((a, b) => {
+        return Math.abs(needle - a) - Math.abs(needle - b);
+      });
+
+      const neededPosition = numbers[0];
+      elevatorWithNewPosition.map((elevator, index) => {
+        if (elevator.position === neededPosition) {
+          elevatorWithNewPosition[index].position = currentIndex * elevatorHeight;
+          setElevators(elevatorWithNewPosition)
+        }
+      })
     }
   };
 
@@ -42,7 +58,7 @@ export const Elevator = () => {
         {elevators.map((elevator, index) => {
           return (
             <div key={index} className="elevator">
-              <div className="item"  style={{top: `${elevator.position}px`}}/>
+              <div className="item"  style={{top: `${elevator.position}px`}}><span>{index +1}</span></div>
             </div>
           )
         })}

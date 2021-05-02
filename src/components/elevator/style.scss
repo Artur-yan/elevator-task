@@ -21,6 +21,9 @@
 
       .item {
         position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         height: 79px;
         width: 50px;
         border: 1px solid gray;
